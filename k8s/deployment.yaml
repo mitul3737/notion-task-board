@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: task-board
+  labels:
+    app: task-board
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: task-board
+  template:
+    metadata:
+      labels:
+        app: task-board
+    spec:
+      containers:
+        - name: task-board
+          image: task-board:v1
+          imagePullPolicy: IfNotPresent   # use the image loaded into kind
+          ports:
+            - containerPort: 8000
+          env:
+            - name: NOTION_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: notion-secret
+                  key: NOTION_TOKEN
+            - name: NOTION_DATABASE_ID
+              valueFrom:
+                secretKeyRef:
+                  name: notion-secret
+                  key: NOTION_DATABASE_ID

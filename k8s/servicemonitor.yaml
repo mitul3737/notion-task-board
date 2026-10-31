@@ -1,0 +1,18 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: task-board
+  namespace: default
+  labels:
+    release: monitoring    # must match the Helm release name
+spec:
+  selector:
+    matchLabels:
+      app: task-board      # matches the Service's labels, not the Pod's
+  namespaceSelector:
+    matchNames:
+      - default
+  endpoints:
+    - port: http           # a named Service port, not a number
+      path: /metrics
+      interval: 30s
